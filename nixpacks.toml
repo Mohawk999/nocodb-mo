@@ -1,0 +1,19 @@
+# This file configures the Nixpacks build environment for NocoDB.
+
+[phases.setup]
+# This is the most critical part. We are telling Nixpacks to use
+# a newer set of Nix packages (nixos-23.11), which includes a modern GLIBC.
+# We also explicitly request pnpm version 8.
+nixPkgs = ["...", "pnpm_8", "nodejs_20"]
+
+[phases.install]
+# We need to use pnpm for installation to respect the workspace setup.
+cmds = ["pnpm install"]
+
+[phases.build]
+# This command builds only the 'nocodb' package from the monorepo.
+cmds = ["pnpm run build --filter nocodb"]
+
+[start]
+# This command starts the 'nocodb' package.
+cmd = "pnpm --filter nocodb start"
